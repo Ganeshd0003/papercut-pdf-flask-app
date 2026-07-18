@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container py-5">
+  <h1 class="fw-bold mb-4">Analytics</h1>
+  <div class="d-flex gap-2 mb-4">
+    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-sm btn-outline-dark">Overview</a>
+    <a href="{{ url_for('admin.users') }}" class="btn btn-sm btn-outline-dark">Users</a>
+    <a href="{{ url_for('admin.files') }}" class="btn btn-sm btn-outline-dark">Files</a>
+    <a href="{{ url_for('admin.analytics') }}" class="btn btn-sm btn-dark">Analytics</a>
+    <a href="{{ url_for('admin.settings') }}" class="btn btn-sm btn-outline-dark">Settings</a>
+  </div>
+  <h2 class="h5 fw-bold mb-3">Usage by tool</h2>
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead><tr><th>Tool</th><th>Jobs run</th></tr></thead>
+      <tbody>
+        {% for tool, count in tool_counts %}
+        <tr><td class="text-capitalize">{{ tool.replace('-', ' ') }}</td><td>{{ count }}</td></tr>
+        {% else %}
+        <tr><td colspan="2" class="text-secondary">No data yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container py-5">
+  <div class="row justify-content-center g-4">
+    <div class="col-md-6">
+      <div class="auth-card p-4">
+        <h2 class="h5 fw-bold mb-3">Profile</h2>
+        <form method="POST" novalidate>
+          {{ form.hidden_tag() }}
+          <div class="mb-3">
+            {{ form.name.label(class="form-label") }}
+            {{ form.name(class="form-control") }}
+          </div>
+          <p class="text-secondary small">Email: {{ current_user.email }}</p>
+          {{ form.submit(class="btn btn-primary") }}
+        </form>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="auth-card p-4">
+        <h2 class="h5 fw-bold mb-3">Change password</h2>
+        <form method="POST" action="{{ url_for('dashboard.change_password') }}" novalidate>
+          {{ password_form.hidden_tag() }}
+          <div class="mb-3">
+            {{ password_form.current_password.label(class="form-label") }}
+            {{ password_form.current_password(class="form-control") }}
+          </div>
+          <div class="mb-3">
+            {{ password_form.new_password.label(class="form-label") }}
+            {{ password_form.new_password(class="form-control") }}
+          </div>
+          <div class="mb-3">
+            {{ password_form.confirm_new_password.label(class="form-label") }}
+            {{ password_form.confirm_new_password(class="form-control") }}
+          </div>
+          {{ password_form.submit(class="btn btn-primary") }}
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

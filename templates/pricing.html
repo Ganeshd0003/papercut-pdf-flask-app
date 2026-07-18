@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container py-5">
+  <div class="text-center mb-5">
+    <h1 class="fw-bold">Simple, transparent pricing</h1>
+    <p class="text-secondary">Start free. Upgrade when you need more.</p>
+  </div>
+  <div class="row g-4 justify-content-center">
+    {% for plan in plans %}
+    <div class="col-md-4">
+      <div class="pricing-card p-4 {% if plan.name == 'Pro' %}pricing-card-featured{% endif %}">
+        <h3 class="fw-bold">{{ plan.name }}</h3>
+        <div class="display-6 fw-bold my-3">{{ plan.price }}</div>
+        <ul class="list-unstyled text-secondary">
+          {% for f in plan.features %}
+          <li class="mb-2">✓ {{ f }}</li>
+          {% endfor %}
+        </ul>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary w-100 mt-3">Get started</a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container py-5 text-center">
+  <h1 class="display-3 fw-bold">429</h1>
+  <p class="text-secondary">Too many requests — please slow down and try again shortly.</p>
+  <a href="{{ url_for('main.index') }}" class="btn btn-primary">Go home</a>
+</section>
+{% endblock %}

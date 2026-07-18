@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container py-5">
+  <h1 class="fw-bold mb-4">User management</h1>
+  <div class="d-flex gap-2 mb-4">
+    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-sm btn-outline-dark">Overview</a>
+    <a href="{{ url_for('admin.users') }}" class="btn btn-sm btn-dark">Users</a>
+    <a href="{{ url_for('admin.files') }}" class="btn btn-sm btn-outline-dark">Files</a>
+    <a href="{{ url_for('admin.analytics') }}" class="btn btn-sm btn-outline-dark">Analytics</a>
+    <a href="{{ url_for('admin.settings') }}" class="btn btn-sm btn-outline-dark">Settings</a>
+  </div>
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead><tr><th>Name</th><th>Email</th><th>Plan</th><th>Admin</th><th>Status</th><th>Joined</th><th></th></tr></thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td>{{ user.name }}</td>
+          <td>{{ user.email }}</td>
+          <td class="text-uppercase">{{ user.plan }}</td>
+          <td>{{ '✓' if user.is_admin else '' }}</td>
+          <td><span class="badge bg-{{ 'success' if user.is_active_account else 'secondary' }}">{{ 'active' if user.is_active_account else 'disabled' }}</span></td>
+          <td>{{ user.created_at.strftime('%b %d, %Y') }}</td>
+          <td>
+            <form method="POST" action="{{ url_for('admin.toggle_user_active', user_id=user.id) }}">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-sm btn-outline-secondary">
+                {{ 'Disable' if user.is_active_account else 'Enable' }}
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

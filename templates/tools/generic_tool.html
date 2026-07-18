@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% block title %}{{ slug|default('tool')|replace('-', ' ')|title }} — {{ app_name }}{% endblock %}
+{% block content %}
+
+{% set slug_name = slug|default('') %}
+{% set multi = slug_name in ['merge', 'jpg-to-pdf'] %}
+{% set accept = '.jpg,.jpeg,.png' if slug_name == 'jpg-to-pdf' else ('.docx,.doc' if slug_name == 'word-to-pdf' else '.pdf') %}
+
+<section class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <h1 class="fw-bold text-capitalize mb-1">{{ slug_name.replace('-', ' ') }}</h1>
+      <p class="text-secondary mb-4">Files are processed securely and removed automatically afterward.</p>
+
+      <form id="toolForm" novalidate>
+        {{ form.hidden_tag() if form.hidden_tag }}
+        <input type="hidden" id="csrfToken" value="{{ csrf_token() }}">
+
+        <div id="dropzone" class="dropzone mb-3">
+          <i data-feather="upload-cloud"></i>
+          <p class="mb-1 fw-semibold">Drag & drop {{ 'files' if multi else 'a file' }} here</p>
+          <p class="text-secondary small mb-2">or click to browse</p>
+          <input type="file" id="fileInput" name="{{ 'files' if multi else 'file' }}"
+                 accept="{{ accept }}" {{ 'multiple' if multi else '' }} class="d-none">
+        </div>
+        <ul id="fileList" class="list-unstyled small mb-3"></ul>
+
+        {% if slug == 'split' or slug == 'extract-pages' or slug == 'delete-pages' %}
+        <div class="mb-3">
+          <label class="form-label">Page ranges (e.g. 1-3,5,7-9)</label>
+          <input type="text" name="{{ 'ranges' if slug == 'split' else 'pages' }}" class="form-control" placeholder="1-3,5" required>
+        </div>
+        {% endif %}
+
+        {% if slug == 'compress' %}
+        <div class="mb-3">
+          <label class="form-label">Compression level</label>
+          <select name="quality" class="form-select">
+            <option value="low">Low (best quality)</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High (smallest file)</option>
+          </select>
+        </div>
+        {% endif %}
+
+        {% if slug == 'rotate' %}
+        <div class="mb-3">
+          <label class="form-label">Rotate by</label>
+          <select name="angle" class="form-select">
+            <option value="90">90°</option>
+            <option value="180">180°</option>
+            <option value="270">270°</option>
+          </select>
+        </div>
+        {% endif %}
+
+        {% if slug == 'watermark' %}
+        <div class="mb-3">
+          <label class="form-label">Watermark text</label>
+          <input type="text" name="text" class="form-control" placeholder="CONFIDENTIAL" required>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Opacity (%)</label>
+          <input type="number" name="opacity" class="form-control" value="30" min="5" max="100">
+        </div>
+        {% endif %}
+
+        {% if slug == 'page-numbers' %}
+        <div class="mb-3">
+          <label class="form-label">Position</label>
+          <select name="position" class="form-select">
+            <option value="bottom-center">Bottom center</option>
+            <option value="bottom-right">Bottom right</option>
+            <option value="top-right">Top right</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Start at</label>
+          <input type="number" name="start_number" class="form-control" value="1" min="1">
+        </div>
+        {% endif %}
+
+        {% if slug == 'protect' %}
+        <div class="mb-3">
+          <label class="form-label">Set password</label>
+          <input type="password" name="password" class="form-control" minlength="4" required>
+        </div>
+        {% endif %}
+
+        {% if slug == 'unlock' %}
+        <div class="mb-3">
+          <label class="form-label">Current password</label>
+          <input type="password" name="password" class="form-control" required>
+        </div>
+        {% endif %}
+
+        {% if slug == 'ocr' %}
+        <div class="mb-3">
+          <label class="form-label">Language</label>
+          <select name="language" class="form-select">
+            <option value="eng">English</option>
+            <option value="fra">French</option>
+            <option value="spa">Spanish</option>
+          </select>
+        </div>
+        {% endif %}
+
+        {% if slug == 'organize' %}
+        <div id="organizeArea" class="mb-3 d-none">
+          <label class="form-label">Drag chips to reorder pages, then process</label>
+          <div id="pageChips" class="d-flex flex-wrap gap-2"></div>
+        </div>
+        {% endif %}
+
+        <div class="progress mb-3 d-none" id="progressWrap">
+          <div class="progress-bar progress-bar-striped progress-bar-animated" id="progressBar" style="width:0%"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg w-100" id="submitBtn">
+          {{ 'Upload' if slug == 'organize' else 'Process' }}
+        </button>
+      </form>
+
+      <div id="resultBox" class="result-box mt-4 d-none">
+        <h5 class="mb-2">✅ Done!</h5>
+        <a id="downloadLink" href="#" class="btn btn-success">Download result</a>
+      </div>
+      <div id="errorBox" class="alert alert-danger mt-4 d-none"></div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>if (window.feather) feather.replace();</script>
+<script>
+const SLUG = {{ slug_name|default('')|tojson }};
+const MULTI = {{ multi|default(false)|tojson }};
+</script>
+<script src="{{ url_for('static', filename='js/tool-upload.js') }}"></script>
+{% endblock %}

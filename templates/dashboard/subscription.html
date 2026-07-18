@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container py-5">
+  <h1 class="fw-bold mb-4">Subscription</h1>
+  <div class="auth-card p-4 col-md-6">
+    <p>Current plan: <span class="badge bg-primary text-uppercase">{{ current_user.plan }}</span></p>
+    <p class="text-secondary small">Billing integration (Stripe, Paddle, etc.) is not wired up in this starter —
+      plug in your payment provider here and update <code>User.plan</code> on successful checkout.</p>
+    <a href="{{ url_for('main.pricing') }}" class="btn btn-primary">View plans</a>
+  </div>
+</section>
+{% endblock %}

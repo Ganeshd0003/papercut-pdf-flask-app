@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container py-5">
+  <h1 class="fw-bold mb-4">File management</h1>
+  <div class="d-flex gap-2 mb-4">
+    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-sm btn-outline-dark">Overview</a>
+    <a href="{{ url_for('admin.users') }}" class="btn btn-sm btn-outline-dark">Users</a>
+    <a href="{{ url_for('admin.files') }}" class="btn btn-sm btn-dark">Files</a>
+    <a href="{{ url_for('admin.analytics') }}" class="btn btn-sm btn-outline-dark">Analytics</a>
+    <a href="{{ url_for('admin.settings') }}" class="btn btn-sm btn-outline-dark">Settings</a>
+  </div>
+  <p class="text-secondary small">Showing the most recent 200 jobs. Files auto-delete per the retention policy in Settings.</p>
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead><tr><th>Tool</th><th>User</th><th>Status</th><th>Size</th><th>Created</th><th>Expires</th></tr></thead>
+      <tbody>
+        {% for job in jobs %}
+        <tr>
+          <td class="text-capitalize">{{ job.tool.replace('-', ' ') }}</td>
+          <td>{{ job.user.email if job.user else 'Guest' }}</td>
+          <td><span class="badge bg-{{ 'success' if job.status=='success' else ('danger' if job.status=='failed' else 'secondary') }}">{{ job.status }}</span></td>
+          <td>{{ (job.file_size_bytes / 1024) | round(1) if job.file_size_bytes else '-' }} KB</td>
+          <td>{{ job.created_at.strftime('%b %d, %Y %H:%M') }}</td>
+          <td>{{ job.expires_at.strftime('%b %d, %Y %H:%M') if job.expires_at else '-' }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

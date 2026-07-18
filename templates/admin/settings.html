@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container py-5">
+  <h1 class="fw-bold mb-4">Settings</h1>
+  <div class="d-flex gap-2 mb-4">
+    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-sm btn-outline-dark">Overview</a>
+    <a href="{{ url_for('admin.users') }}" class="btn btn-sm btn-outline-dark">Users</a>
+    <a href="{{ url_for('admin.files') }}" class="btn btn-sm btn-outline-dark">Files</a>
+    <a href="{{ url_for('admin.analytics') }}" class="btn btn-sm btn-outline-dark">Analytics</a>
+    <a href="{{ url_for('admin.settings') }}" class="btn btn-sm btn-dark">Settings</a>
+  </div>
+  <div class="auth-card p-4 col-md-6">
+    <p><strong>App name:</strong> {{ config.APP_NAME }}</p>
+    <p><strong>Max upload size:</strong> {{ (config.MAX_CONTENT_LENGTH / (1024*1024)) | int }} MB</p>
+    <p><strong>File retention:</strong> {{ config.FILE_RETENTION_MINUTES }} minutes</p>
+    <p class="text-secondary small mb-0">These values are set via environment variables — edit your <code>.env</code> file and restart the app to change them.</p>
+  </div>
+</section>
+{% endblock %}

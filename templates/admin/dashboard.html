@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container py-5">
+  <h1 class="fw-bold mb-4">Admin dashboard</h1>
+  <div class="d-flex gap-2 mb-4">
+    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-sm btn-dark">Overview</a>
+    <a href="{{ url_for('admin.users') }}" class="btn btn-sm btn-outline-dark">Users</a>
+    <a href="{{ url_for('admin.files') }}" class="btn btn-sm btn-outline-dark">Files</a>
+    <a href="{{ url_for('admin.analytics') }}" class="btn btn-sm btn-outline-dark">Analytics</a>
+    <a href="{{ url_for('admin.settings') }}" class="btn btn-sm btn-outline-dark">Settings</a>
+  </div>
+
+  <div class="row g-4 mb-4">
+    <div class="col-md-3"><div class="stat-card p-4"><div class="text-secondary small">Total users</div><div class="display-6 fw-bold">{{ total_users }}</div></div></div>
+    <div class="col-md-3"><div class="stat-card p-4"><div class="text-secondary small">Total jobs</div><div class="display-6 fw-bold">{{ total_jobs }}</div></div></div>
+    <div class="col-md-3"><div class="stat-card p-4"><div class="text-secondary small">Failed jobs</div><div class="display-6 fw-bold text-danger">{{ failed_jobs }}</div></div></div>
+    <div class="col-md-3"><div class="stat-card p-4"><div class="text-secondary small">Jobs (7 days)</div><div class="display-6 fw-bold">{{ jobs_last_7d }}</div></div></div>
+  </div>
+
+  <h2 class="h5 fw-bold mb-3">Recent jobs</h2>
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead><tr><th>User</th><th>Tool</th><th>Status</th><th>Date</th></tr></thead>
+      <tbody>
+        {% for job in recent_jobs %}
+        <tr>
+          <td>{{ job.user.email if job.user else 'Guest' }}</td>
+          <td class="text-capitalize">{{ job.tool.replace('-', ' ') }}</td>
+          <td><span class="badge bg-{{ 'success' if job.status=='success' else ('danger' if job.status=='failed' else 'secondary') }}">{{ job.status }}</span></td>
+          <td>{{ job.created_at.strftime('%b %d, %Y %H:%M') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

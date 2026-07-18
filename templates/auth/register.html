@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-5">
+      <div class="auth-card p-4">
+        <h1 class="fw-bold mb-4 text-center">Create your account</h1>
+        <form method="POST" novalidate>
+          {{ form.hidden_tag() }}
+          <div class="mb-3">
+            {{ form.name.label(class="form-label") }}
+            {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else "")) }}
+            {% for e in form.name.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+          </div>
+          <div class="mb-3">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "")) }}
+            {% for e in form.email.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+          </div>
+          <div class="mb-3">
+            {{ form.password.label(class="form-label") }}
+            {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else "")) }}
+            {% for e in form.password.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+          </div>
+          <div class="mb-3">
+            {{ form.confirm_password.label(class="form-label") }}
+            {{ form.confirm_password(class="form-control" + (" is-invalid" if form.confirm_password.errors else "")) }}
+            {% for e in form.confirm_password.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+          </div>
+          {{ form.submit(class="btn btn-primary w-100") }}
+        </form>
+        <p class="text-center text-secondary small mt-3 mb-0">
+          Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

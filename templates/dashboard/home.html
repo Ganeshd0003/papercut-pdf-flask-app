@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container py-5">
+  <h1 class="fw-bold mb-1">Welcome back, {{ current_user.name }}</h1>
+  <p class="text-secondary mb-4">Plan: <span class="badge bg-primary text-uppercase">{{ current_user.plan }}</span></p>
+
+  <div class="row g-4 mb-4">
+    <div class="col-md-4">
+      <div class="stat-card p-4">
+        <div class="text-secondary small">Total files processed</div>
+        <div class="display-6 fw-bold">{{ total_jobs }}</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="stat-card p-4">
+        <div class="text-secondary small">Account</div>
+        <a href="{{ url_for('dashboard.profile') }}" class="btn btn-outline-primary btn-sm mt-2">Edit profile</a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="stat-card p-4">
+        <div class="text-secondary small">Subscription</div>
+        <a href="{{ url_for('dashboard.subscription') }}" class="btn btn-outline-primary btn-sm mt-2">Manage plan</a>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="h5 fw-bold mb-3">Recent activity</h2>
+  <div class="table-responsive">
+    <table class="table align-middle">
+      <thead><tr><th>Tool</th><th>Status</th><th>Date</th><th></th></tr></thead>
+      <tbody>
+        {% for job in recent_jobs %}
+        <tr>
+          <td class="text-capitalize">{{ job.tool.replace('-', ' ') }}</td>
+          <td><span class="badge bg-{{ 'success' if job.status=='success' else ('danger' if job.status=='failed' else 'secondary') }}">{{ job.status }}</span></td>
+          <td>{{ job.created_at.strftime('%b %d, %Y %H:%M') }}</td>
+          <td>
+            {% if job.status == 'success' %}
+            <a href="{{ url_for('tools.download', job_id=job.id) }}" class="btn btn-sm btn-outline-primary">Download</a>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4" class="text-secondary">No activity yet — try a tool!</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <a href="{{ url_for('dashboard.history') }}" class="btn btn-link ps-0">View full history →</a>
+</section>
+{% endblock %}

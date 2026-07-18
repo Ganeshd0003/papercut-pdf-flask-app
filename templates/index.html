@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="hero py-5">
+  <div class="container text-center py-5">
+    <h1 class="display-4 fw-bold mb-3">Every PDF tool you need.<br><span class="text-gradient">One clean workspace.</span></h1>
+    <p class="lead text-secondary col-lg-7 mx-auto">{{ tagline }} No installs, no clutter — just pick a tool and go.</p>
+    <a href="#tools" class="btn btn-primary btn-lg mt-3 px-4">Browse tools</a>
+  </div>
+</section>
+
+<section id="tools" class="container py-5">
+  <h2 class="fw-bold mb-4">All tools</h2>
+  <div class="row g-3">
+    {% for tool in tools %}
+    <div class="col-6 col-md-4 col-lg-3">
+      <a href="{{ url_for('tools.tool_page', slug=tool.slug) }}" class="tool-card text-decoration-none">
+        <div class="tool-icon"><i data-feather="{{ tool.icon }}"></i></div>
+        <div class="tool-name">{{ tool.name }}</div>
+        <div class="tool-desc text-secondary small">{{ tool.desc }}</div>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="container py-5">
+  <h2 class="fw-bold mb-4">Frequently asked questions</h2>
+  <div class="accordion" id="faqAccordion">
+    {% for q, a in faqs %}
+    <div class="accordion-item">
+      <h2 class="accordion-header">
+        <button class="accordion-button {% if not loop.first %}collapsed{% endif %}" type="button"
+                data-bs-toggle="collapse" data-bs-target="#faq{{ loop.index }}">
+          {{ q }}
+        </button>
+      </h2>
+      <div id="faq{{ loop.index }}" class="accordion-collapse collapse {% if loop.first %}show{% endif %}"
+           data-bs-parent="#faqAccordion">
+        <div class="accordion-body text-secondary">{{ a }}</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock %}
+{% block scripts %}
+<script>if (window.feather) feather.replace();</script>
+{% endblock %}
